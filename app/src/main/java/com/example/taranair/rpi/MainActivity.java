@@ -23,6 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
 import android.content.Intent;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class MainActivity extends Activity {
@@ -30,6 +37,7 @@ public class MainActivity extends Activity {
     Button button1;
     CharSequence edit_text_value;
     String url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
