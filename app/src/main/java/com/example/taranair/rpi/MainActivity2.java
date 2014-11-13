@@ -6,15 +6,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
-
-
-
-
+import android.widget.TextView;
 
 
 public class MainActivity2 extends Activity {
 
-
+    public static TextView textView;
 
 
 
@@ -22,6 +19,8 @@ public class MainActivity2 extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity2);
+        textView = (TextView) findViewById(R.id.savedRoutes);
+
 
     }
 

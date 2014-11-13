@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
         button1 = (Button) findViewById(R.id.button1);
 
 
+
         // check if you are connected or not
         /*
         if(isConnected()){
@@ -68,8 +69,16 @@ public class MainActivity extends Activity {
 
     public void sendMessage(View view)
     {
+
         Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+        Bundle bundle = getIntent().getExtras();
+        String searchText = bundle.getString("searchText");
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("searchText1", searchText);
+        intent.putExtras(bundle1);
         startActivity(intent);
+
+
     }
 
     /*

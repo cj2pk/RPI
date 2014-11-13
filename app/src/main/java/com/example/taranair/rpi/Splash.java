@@ -13,11 +13,12 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
     int secondsDelayed = 1;
     Handler handler = new Handler();
     handler.postDelayed(new Runnable() {
         public void run () {
-            startActivity(new Intent(Splash.this, MainActivity.class));
+            startActivity(new Intent(Splash.this, DestinationScreen.class));
             finish();
         }
 
