@@ -37,7 +37,8 @@ public class MainActivity extends Activity {
     Button button1;
     CharSequence edit_text_value;
     String url;
-
+    String destination;
+    public static boolean ifClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,10 @@ public class MainActivity extends Activity {
 
         // get reference to the views
         button1 = (Button) findViewById(R.id.button1);
+        Intent i = getIntent();
+        destination = i.getStringExtra("key");
+
+
 
 
 
@@ -71,15 +76,18 @@ public class MainActivity extends Activity {
     {
 
         Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-        Bundle bundle = getIntent().getExtras();
-        String searchText = bundle.getString("searchText");
-        Bundle bundle1 = new Bundle();
-        bundle1.putString("searchText1", searchText);
-        intent.putExtras(bundle1);
         startActivity(intent);
 
 
     }
+
+    public void sendMessage3(View view)
+    {
+        ifClicked = true;
+
+    }
+
+
 
     /*
     private void find_and_modify_text_view() {

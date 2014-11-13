@@ -15,6 +15,7 @@ import android.widget.TextView;
 public class DestinationScreen extends Activity {
 
     Button editButton;
+    public static String edit_text_value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +37,11 @@ public class DestinationScreen extends Activity {
     public void sendMessage2(View view)
     {
         EditText edit_text = (EditText) findViewById(R.id.edit_text);
-        String edit_text_value = edit_text.getText().toString();
+        edit_text_value = edit_text.getText().toString();
 
         //textView.setText(edit_text_value+"\n");
         Intent intent = new Intent(DestinationScreen.this, MainActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("SearchText", edit_text_value);
-        intent.putExtras(bundle);
+        intent.putExtra("key", edit_text_value);
         startActivity(intent);
 
 

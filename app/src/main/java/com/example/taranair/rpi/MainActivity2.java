@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 public class MainActivity2 extends Activity {
 
-    public static TextView textView;
 
+    public static TextView textView;
 
 
     @Override
@@ -20,13 +20,26 @@ public class MainActivity2 extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity2);
         textView = (TextView) findViewById(R.id.savedRoutes);
+        if (MainActivity.ifClicked == true) {
+            textView.append(DestinationScreen.edit_text_value + "\n");
+            MainActivity.ifClicked = false;
+        }
 
+
+    }
+
+    public void onResume(){
+        super.onResume();
+        if (MainActivity.ifClicked == true) {
+            textView.append(DestinationScreen.edit_text_value + "\n");
+            MainActivity.ifClicked = false;
+        }
 
     }
 
     public void sendMessage1(View view)
     {
-        Intent intent = new Intent(MainActivity2.this, MainActivity.class);
+        Intent intent = new Intent(MainActivity2.this, DestinationScreen.class);
         startActivity(intent);
     }
 
