@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import android.location.LocationListener;
 import android.location.Criteria;
@@ -80,6 +81,8 @@ public class MainActivity extends Activity implements LocationListener {
     private static final long MIN_TIME_FOR_UPDATE = 1000*30;
     double distPrev;
     double dist;
+    Lights mapLights;
+
 
     protected LocationManager locationManager;
     private boolean canGetLocation;
@@ -157,11 +160,13 @@ public class MainActivity extends Activity implements LocationListener {
             //this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(38.0356,-78.503)));
             this.googleMap.animateCamera(cameraUpdate);
             dist = getDist();
+            mapLights.onStart();
             googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(finallat, finallong))
                     .title("Destination"));
             Toast.makeText(getApplicationContext(), "Distance " + dist, Toast.LENGTH_SHORT).show();
             Toast.makeText(getApplicationContext(), "lat " + finallat, Toast.LENGTH_SHORT).show();
+            //new HttpAsyncTask().execute(url);
 
         }
     }
@@ -299,12 +304,14 @@ public class MainActivity extends Activity implements LocationListener {
     public void onLocationChanged(Location location) {
         currentlat = location.getLatitude();
         currentlong = location.getLongitude();
+        distPrev = getDist();
         if (distanceChecker()){
-            //lightsChangePos();
+            mapLights.lightsChangePos();
         }
         else {
-            //lightsChangeNeg();
+            mapLights.lightsChangeNeg();
         }
+        new HttpAsyncTask().execute(url);
     }
 
     @Override
@@ -360,7 +367,7 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
     private double getDist(){
-        double R = 6378137; // EarthÕs mean radius in meter
+        double R = 6378137; // EarthÃ•s mean radius in meter
         double dLat = torad(finallat - currentlat);
         double dLong = torad(finallong - currentlong);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -386,9 +393,6 @@ public class MainActivity extends Activity implements LocationListener {
 
     }
 
-
-
-    /*
     private void find_and_modify_text_view() {
         Button get_edit_view_button = (Button) findViewById(R.id.get_edit_view_button);
         get_edit_view_button.setOnClickListener(get_edit_view_button_listener);
@@ -401,13 +405,14 @@ public class MainActivity extends Activity implements LocationListener {
             edit_text_value = edit_text.getText();
             setTitle("EditText:" + edit_text_value);
             url = edit_text_value.toString();
-            //System.out.println(url);
+
+
 
         }
 
     };
 
-    public static String POST(String url, String jsonSent){
+    public static String POST(String url, Lights lights){
         InputStream inputStream = null;
         String result = "";
         try {
@@ -420,11 +425,30 @@ public class MainActivity extends Activity implements LocationListener {
 
             String json = "";
 
-            // 4. convert JSONObject to JSON to String
-            json = jsonSent;
+            // 3. build jsonObject
+            JSONObject jsonLight = new JSONObject();
+            try{
+                jsonLight.accumulate("lightId", 1);
+                jsonLight.accumulate("red", lights.getR());
+                jsonLight.accumulate("blue", lights.getB());
+                jsonLight.accumulate("green", lights.getG());
+                jsonLight.accumulate("intensity", 0.5);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
-            System.out.println(json);
-            System.out.println(url);
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(jsonLight);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("lights", jsonArray);
+            jsonObject.put("propagate", true);
+
+
+            // 4. convert JSONObject to JSON to String
+            json = jsonObject.toString();
+
 
             // 5. set json to StringEntity
             StringEntity se = new StringEntity(json);
@@ -466,37 +490,23 @@ public class MainActivity extends Activity implements LocationListener {
         else
             return false;
     }
-    @Override
-    public void onClick(View view) {
 
-        switch(view.getId()){
-            case R.id.button1:
-                if(!validate())
-                    Toast.makeText(getBaseContext(), "Enter some data!", Toast.LENGTH_LONG).show();
-                // call AsynTask to perform network operation on separate thread
-                new HttpAsyncTask().execute(url);
-                break;
 
-        }
-
-    }
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
+            Lights lights = new Lights();
+            lights.setR(mapLights.getR());
+            lights.setG(mapLights.getG());
+            lights.setB(mapLights.getB());
 
-            String jsonhello = "{\"lights\": [{\"lightId\": 1, \"red\":0,\"green\":0,\"blue\":255, \"intensity\": 0.5}],\"propagate\": true}";
-
-            return POST(urls[0], jsonhello);
+            return POST(urls[0], lights);
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
             Toast.makeText(getBaseContext(), "Data Sent!", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private boolean validate(){
-        return true;
     }
     private static String convertInputStreamToString(InputStream inputStream) throws IOException{
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
@@ -509,5 +519,5 @@ public class MainActivity extends Activity implements LocationListener {
         return result;
 
     }
-    */
+
 }
