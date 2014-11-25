@@ -65,23 +65,22 @@ public class MainActivity extends Activity implements LocationListener {
 
     Button button1;
     CharSequence edit_text_value;
-    String url;
-    String destination;
-    String destination1;
+
 
     public static boolean ifClicked = false;
     private Context mContext;
     private GoogleMap googleMap;
     double currentlat;
     double currentlong;
-    double finallat;
-    double finallong;
     Location location;
     private static final long MIN_DIST_FOR_UPDATE = 10;
     private static final long MIN_TIME_FOR_UPDATE = 1000*30;
     double distPrev;
     double dist;
+    double finalLat = 38.035972;
+    double finalLng = -78.503337;
     Lights mapLights;
+    String url;
 
 
     protected LocationManager locationManager;
@@ -93,10 +92,9 @@ public class MainActivity extends Activity implements LocationListener {
         setContentView(R.layout.activity_main);
         button1 = (Button) findViewById(R.id.button1);
         Intent i = getIntent();
-        destination = i.getStringExtra("key");
-        destination1 = i.getStringExtra("key1");
-        finallat = Double.parseDouble(destination);
-        finallong = Double.parseDouble(destination1);
+        url = i.getStringExtra("key");
+        //Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
+
         try {
             initializeMap();
 
@@ -160,13 +158,16 @@ public class MainActivity extends Activity implements LocationListener {
             //this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(38.0356,-78.503)));
             this.googleMap.animateCamera(cameraUpdate);
             dist = getDist();
-            mapLights.onStart();
+            //mapLights.onStart();
+            /*
             googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(finallat, finallong))
+                    .position(new LatLng(finalLat, finalLng))
                     .title("Destination"));
-            Toast.makeText(getApplicationContext(), "Distance " + dist, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "lat " + finallat, Toast.LENGTH_SHORT).show();
+                    */
+            //Toast.makeText(getApplicationContext(), "Distance " + dist, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "lat " + finalLat, Toast.LENGTH_SHORT).show();
             //new HttpAsyncTask().execute(url);
+
 
         }
     }
@@ -311,6 +312,7 @@ public class MainActivity extends Activity implements LocationListener {
         else {
             mapLights.lightsChangeNeg();
         }
+
         new HttpAsyncTask().execute(url);
     }
 
@@ -330,29 +332,7 @@ public class MainActivity extends Activity implements LocationListener {
         return null;
     }
 
-    public Map<Double, Double> getLocationFromAddress(String strAddress){
 
-        Geocoder coder = new Geocoder(this);
-        Map<Double,Double> latlong = new HashMap<Double, Double>();
-        try {
-            ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName(destination, 50);
-            for(Address add : addresses){
-                double longitude = add.getLongitude();
-                double latitude = add.getLatitude();
-                latlong.put(latitude, longitude);
-                finallat = latitude;
-                finallong = longitude;
-                googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(finallat, finallong))
-                        .title("Destination"));
-                Toast.makeText(getApplicationContext(), "your lat is" + finallat, Toast.LENGTH_SHORT).show();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return latlong;
-    }
 
     private boolean distanceChecker(){
         if (distPrev <= dist){
@@ -368,17 +348,17 @@ public class MainActivity extends Activity implements LocationListener {
 
     private double getDist(){
         double R = 6378137; // EarthÃ•s mean radius in meter
-        double dLat = torad(finallat - currentlat);
-        double dLong = torad(finallong - currentlong);
+        double dLat = torad(finalLat - currentlat);
+        double dLong = torad(finalLng - currentlong);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(torad(currentlat)) * Math.cos(torad(finallat)) *
+                Math.cos(torad(currentlat)) * Math.cos(torad(finalLat)) *
                         Math.sin(dLong / 2) * Math.sin(dLong / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = R * c;
         return d; // returns the distance in meter
     }
 
-    public void sendMessage(View view)
+    public void sendMessage1(View view)
     {
 
         Intent intent = new Intent(MainActivity.this, MainActivity2.class);
@@ -387,30 +367,9 @@ public class MainActivity extends Activity implements LocationListener {
 
     }
 
-    public void sendMessage3(View view)
-    {
-        ifClicked = true;
-
-    }
-
-    private void find_and_modify_text_view() {
-        Button get_edit_view_button = (Button) findViewById(R.id.get_edit_view_button);
-        get_edit_view_button.setOnClickListener(get_edit_view_button_listener);
-
-    }
-
-    private Button.OnClickListener get_edit_view_button_listener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            EditText edit_text = (EditText) findViewById(R.id.edit_text);
-            edit_text_value = edit_text.getText();
-            setTitle("EditText:" + edit_text_value);
-            url = edit_text_value.toString();
 
 
 
-        }
-
-    };
 
     public static String POST(String url, Lights lights){
         InputStream inputStream = null;

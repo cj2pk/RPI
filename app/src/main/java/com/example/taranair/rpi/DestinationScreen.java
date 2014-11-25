@@ -16,10 +16,8 @@ public class DestinationScreen extends Activity {
 
     Button editButton;
     public static String edit_text_value;
-    public static String edit_text_value1;
-    public static String edit_text_value2;
-    public static Double lat;
-    public static Double lng;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,25 +36,15 @@ public class DestinationScreen extends Activity {
         return true;
     }
 
-    public void sendMessage2(View view)
-    {
+    public void sendMessage(View view){
         EditText edit_text = (EditText) findViewById(R.id.edit_text);
-        EditText edit_text1 = (EditText) findViewById(R.id.edit_text1);
-        EditText edit_text2 = (EditText) findViewById(R.id.edit_text2);
         edit_text_value = edit_text.getText().toString();
-        edit_text_value1 = edit_text1.getText().toString();
-        edit_text_value2 = edit_text2.getText().toString();
-        lat = Double.parseDouble(edit_text_value);
-        lng = Double.parseDouble(edit_text_value);
-
-        //textView.setText(edit_text_value+"\n");
         Intent intent = new Intent(DestinationScreen.this, MainActivity.class);
         intent.putExtra("key", edit_text_value);
-        intent.putExtra("key1", edit_text_value1);
         startActivity(intent);
-
-
     }
+
+
 
 /*
     private void find_and_modify_text_view() {

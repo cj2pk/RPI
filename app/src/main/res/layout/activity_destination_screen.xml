@@ -20,35 +20,7 @@
             android:textSize="32sp"
             android:text="Enter IP Address"/>
 
-        <EditText android:id="@+id/edit_text2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="" />
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="32sp"
-            android:text="Enter latitude"/>
-
         <EditText android:id="@+id/edit_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="32sp"
-            android:text="Enter longitude"/>
-
-        <EditText android:id="@+id/edit_text1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -58,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:onClick="sendMessage2"
+            android:onClick="sendMessage"
             android:textColor="@color/white"
             android:text="GO!" />
 

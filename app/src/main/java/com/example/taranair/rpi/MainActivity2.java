@@ -1,68 +1,96 @@
 package com.example.taranair.rpi;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.content.Intent;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.os.AsyncTask;
 
+import twitter4j.*;
+import twitter4j.conf.ConfigurationBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity2 extends Activity {
-
-
-    public static TextView textView;
-
+    Context mContext;
+    Twitter mTwitter;
+    ListView mListView;
+    List<Status> statuses = new ArrayList<Status>();
+    ArrayList<String> statusTexts = new ArrayList<String>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity2);
-        textView = (TextView) findViewById(R.id.savedRoutes);
-        if (MainActivity.ifClicked == true) {
-            textView.append(DestinationScreen.edit_text_value + "\n");
-            MainActivity.ifClicked = false;
-        }
+        mListView = (ListView) findViewById(R.id.listview);
+        mContext = getApplicationContext();
+        new updateTimeline().execute();
+
 
 
     }
 
-    public void onResume(){
+    //@Override
+
+    /*
+    public void onResume() {
         super.onResume();
-        if (MainActivity.ifClicked == true) {
-            textView.append(DestinationScreen.edit_text_value + "\n");
-            MainActivity.ifClicked = false;
+        showTweetsAbout("Potatos");
+    }
+    */
+
+
+    //return new TwitterFactory(cb.build()).getInstance();
+    class updateTimeline extends AsyncTask<Void, Void, Void> {
+
+
+        protected Void doInBackground(Void... arg0) {
+            mListView = (ListView) findViewById(R.id.listview);
+            mContext = getApplicationContext();
+            ConfigurationBuilder cb = new ConfigurationBuilder();
+            cb.setOAuthConsumerKey(getString(R.string.twitter_consumer_key));
+            cb.setOAuthConsumerSecret(getString(R.string.twitter_consumer_secret));
+            cb.setOAuthAccessToken(getString(R.string.access_token));
+            cb.setOAuthAccessTokenSecret(getString(R.string.access_token_secret));
+            mTwitter = new TwitterFactory(cb.build()).getInstance();
+
+
+            try {
+                statuses = mTwitter.search(new Query("Rotunda UVa")).getTweets();
+
+                for (twitter4j.Status s : statuses) {
+                    statusTexts.add(s.getText() + "\n\n");
+                }
+            } catch (Exception e) {
+                statusTexts.add("Twitter query failed: " + e.toString());
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity2.this, android.R.layout.simple_list_item_1, android.R.id.text1, statusTexts);
+                mListView.setAdapter(adapter);
+            }
+
+
+            return null;
         }
 
-    }
-
-    public void sendMessage1(View view)
-    {
-        Intent intent = new Intent(MainActivity2.this, DestinationScreen.class);
-        startActivity(intent);
-    }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_activity2, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        protected void onPostExecute(Void result) {
+            // dismiss the dialog after getting all products
+            //pDialog.dismiss();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity2.this, android.R.layout.simple_list_item_1, android.R.id.text1, statusTexts);
+                    mListView.setAdapter(adapter);
+
+                }
+
+            });
         }
 
-        return super.onOptionsItemSelected(item);
     }
 }
