@@ -121,7 +121,6 @@ public class MainActivity extends Activity implements LocationListener {
         else{
             System.out.println("NONO");
         }
-
         // add click listener to Button "POST"
         button1.setOnClickListener(this);
         */
@@ -313,15 +312,22 @@ public class MainActivity extends Activity implements LocationListener {
     public void onLocationChanged(Location location) {
         currentlat = location.getLatitude();
         currentlong = location.getLongitude();
-        distPrev = getDist();
+        distPrev = dist;
+        dist = getDist();
         if (distanceChecker()){
-            mapLights.lightsChangePos();
+            lightsChangePos();
         }
         else {
-            mapLights.lightsChangeNeg();
+            lightsChangeNeg();
         }
-
-        new HttpAsyncTask().execute(url);
+    }
+    
+    public void lightsChangePos() {
+        new HttpAsyncTaskBlue().execute(url);
+    }
+    
+    public void lightsChangeNeg(){
+        new HttpAsyncTaskRed().execute(url);
     }
 
     @Override
@@ -343,7 +349,7 @@ public class MainActivity extends Activity implements LocationListener {
 
 
     private boolean distanceChecker(){
-        if (distPrev <= dist){
+        if (dist <=  distPrev){
             return true;
         }
         else
@@ -376,11 +382,14 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
 
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> FETCH_HEAD
     public static String POST(String url, Lights lights){
         InputStream inputStream = null;
         String result = "";
@@ -398,9 +407,9 @@ public class MainActivity extends Activity implements LocationListener {
             JSONObject jsonLight = new JSONObject();
             try{
                 jsonLight.accumulate("lightId", 1);
-                jsonLight.accumulate("red", lights.getR());
-                jsonLight.accumulate("blue", lights.getB());
-                jsonLight.accumulate("green", lights.getG());
+                jsonLight.accumulate("red", 255);
+                jsonLight.accumulate("blue", 0);
+                jsonLight.accumulate("green", 0);
                 jsonLight.accumulate("intensity", 0.5);
             }
             catch (Exception e){
@@ -461,15 +470,12 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class HttpAsyncTaskBlue extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            Lights lights = new Lights();
-            lights.setR(mapLights.getR());
-            lights.setG(mapLights.getG());
-            lights.setB(mapLights.getB());
+            String jsonhello = "{\"lights\": [{\"lightId\": 1, \"red\":0,\"green\":0,\"blue\":255, \"intensity\": 0.5}],\"propagate\": true}";
 
-            return POST(urls[0], lights);
+            return POST(urls[0], jsonhello);
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
@@ -477,6 +483,21 @@ public class MainActivity extends Activity implements LocationListener {
             Toast.makeText(getBaseContext(), "Data Sent!", Toast.LENGTH_LONG).show();
         }
     }
+    
+    private class HttpAsyncTaskRed extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            String jsonhello = "{\"lights\": [{\"lightId\": 1, \"red\":255,\"green\":0,\"blue\":0, \"intensity\": 0.5}],\"propagate\": true}";
+
+            return POST(urls[0], jsonhello);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getBaseContext(), "Data Sent!", Toast.LENGTH_LONG).show();
+        }
+    }
+    
     private static String convertInputStreamToString(InputStream inputStream) throws IOException{
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
         String line = "";
