@@ -9,6 +9,11 @@
     android:gravity="center"
     android:id="@+id/splash">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="fill_parent"
+        android:gravity="center"
+        android:layout_height="fill_parent">
+
     <TextView
         android:text="@string/title_string"
         android:layout_width="fill_parent"
@@ -16,5 +21,37 @@
         android:textColor="@color/white"
         android:gravity="center"
         android:textSize="32sp"/>
+
+        <Button android:id="@+id/btnLoginTwitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login with Twitter"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:onClick="twitterLogin"
+            android:textColor="@color/white"
+            android:layout_marginTop="30dip"/>
+
+    <Button android:id="@+id/rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:onClick="goToRules"
+        android:textColor="@color/white"
+        android:text="Rules!" />
+
+
+
+    <Button android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:onClick="goToDestination"
+        android:textColor="@color/white"
+        android:text="GO!" />
+
+
+
+    </LinearLayout>
 
 </RelativeLayout>

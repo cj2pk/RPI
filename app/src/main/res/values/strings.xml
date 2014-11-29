@@ -13,7 +13,7 @@
     <string name="title_activity_main_activity2">MainActivity2</string>
     <string name="title_activity_destination_screen">DestinationScreen</string>
 
-    <!-- Strings used in app ui-->
+    <!-- Strings used in app ui -->
 
     <string name="hello">Hello, </string>
     <string name="login_instructions">Login to twitter</string>
@@ -29,4 +29,7 @@
     <string name="access_token_secret">N2nO6KzCW9pVJTEyCBJUOiZ1PC7ksuMJ3A8XgjsvkHfJN</string>
     <string name="twitter_oauth_verifier">oauth_verifier</string>
     <!-- End Configurations -->
+    <string name="title_activity_rules">Rules</string>
+    <string name="title_activity_update_status">updateStatus</string>
+
 </resources>

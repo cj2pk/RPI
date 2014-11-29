@@ -158,6 +158,14 @@ public class MainActivity extends Activity implements LocationListener {
             //this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(38.0356,-78.503)));
             this.googleMap.animateCamera(cameraUpdate);
             dist = getDist();
+            //dist = 10;
+
+            if (dist <= 10) {
+                Intent intent = new Intent(MainActivity.this, updateStatus.class);
+                startActivity(intent);
+
+
+            }
             //mapLights.onStart();
             /*
             googleMap.addMarker(new MarkerOptions()
@@ -366,6 +374,8 @@ public class MainActivity extends Activity implements LocationListener {
 
 
     }
+
+
 
 
 
