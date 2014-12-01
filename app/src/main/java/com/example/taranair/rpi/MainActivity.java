@@ -310,6 +310,8 @@ public class MainActivity extends Activity implements LocationListener {
     }
     @Override
     public void onLocationChanged(Location location) {
+        Toast toast = Toast.makeText(getApplicationContext()), "Loc Changed", Toast.LENGTH_SHORT);  
+        toast.show();
         currentlat = location.getLatitude();
         currentlong = location.getLongitude();
         distPrev = dist;
